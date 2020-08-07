@@ -6,7 +6,7 @@
       <key>zlib</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler</string>
+        <string>Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler</string>
         <key>description</key>
         <string>Zlib Data Compression Library</string>
         <key>license</key>
@@ -17,18 +17,6 @@
         <string>zlib</string>
         <key>platforms</key>
         <map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>1a79eeac199c2d94e4ae4e5d0194e25f</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/zlib_3p-update-zlib/rev/296881/arch/Darwin/installer/zlib-1.2.8.296881-darwin-296881.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
           <key>darwin64</key>
           <map>
             <key>archive</key>
@@ -41,26 +29,16 @@
             <key>name</key>
             <string>darwin64</string>
           </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>98a8c775c581ca80bb559e8b4e8eaae7</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-zlib/rev/314131/arch/Linux/installer/zlib-1.2.8.314131-linux-314131.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dab6be8b0596c1e3354f2b6d41335131</string>
+              <string>5d7866be22eaca6d38cfd0bb4e411fb0</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/866/1898/zlib-1.2.8.500857-linux64-500857.tar.bz2</string>
+              <string>https://pkg.alchemyviewer.org/repository/autobuild-external/zlib/linux64/debian10/zlib-1.2.11.202200500-linux64-202200500.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -91,7 +69,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.8.538988</string>
+        <string>1.2.11.202200500</string>
       </map>
     </map>
     <key>package_description</key>
