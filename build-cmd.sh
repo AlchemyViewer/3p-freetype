@@ -155,7 +155,7 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                 CXXFLAGS="$DEBUG_CXXFLAGS" \
                 CPPFLAGS="${CPPFLAGS:-} ${DEBUG_CPPFLAGS} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --enable-shared=no --with-pic \
+                ./configure --enable-shared=no --with-pic --with-zlib=yes \
                     --prefix="\${AUTOBUILD_PACKAGES_DIR}" --libdir="\${prefix}/lib/debug"
             make
             make install DESTDIR="$stage"
@@ -176,7 +176,7 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                 CXXFLAGS="$RELEASE_CXXFLAGS" \
                 CPPFLAGS="${CPPFLAGS:-} ${RELEASE_CPPFLAGS} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --enable-shared=no --with-pic \
+                ./configure --enable-shared=no --with-pic --with-zlib=yes \
                     --prefix="\${AUTOBUILD_PACKAGES_DIR}" --libdir="\${prefix}/lib/release"
             make
             make install DESTDIR="$stage"
