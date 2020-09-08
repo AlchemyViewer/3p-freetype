@@ -65,4 +65,21 @@
       <UserDependencies>dhelper64.lib</UserDependencies>
     </PropertyGroup>
    -->
+    <PropertyGroup Label="DebugLibs"
+                   Condition="'$(Configuration)'=='Debug'">
+      <UserDefines>ZLIB_DLL</UserDefines>
+      <UserOptionDirectory></UserOptionDirectory>
+      <UserIncludeDirectories>..\..\..\..\stage\packages\include\zlib</UserIncludeDirectories>
+      <UserLibraryDirectories>..\..\..\..\stage\packages\lib\debug</UserLibraryDirectories>
+      <UserDependencies>zlibd.lib</UserDependencies>
+    </PropertyGroup>
+    <PropertyGroup Label="ReleaseLibs"
+                   Condition="'$(Configuration)'=='Release'">
+      <UserDefines>ZLIB_DLL</UserDefines>
+      <UserOptionDirectory></UserOptionDirectory>
+      <UserIncludeDirectories>..\..\..\..\stage\packages\include\zlib</UserIncludeDirectories>
+      <UserLibraryDirectories>..\..\..\..\stage\packages\lib\release</UserLibraryDirectories>
+      <UserDependencies>zlib.lib</UserDependencies>
+    </PropertyGroup>
+
 </Project>
