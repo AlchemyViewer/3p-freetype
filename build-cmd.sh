@@ -46,7 +46,14 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         windows*)
             load_vsvars
 
-            case "$AUTOBUILD_VSVER" in
+            if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
+            then
+                outdir="Win32"
+            else
+                outdir="x64"
+            fi
+
+            case "$AUTOBUILD_WIN_VSVER" in
                 "120")
                     verdir="vc2013"
                     ;;
@@ -56,19 +63,28 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                     # outputs will be found in the same places as before.
                     verdir="vc2013"
                     ;;
+                16*)
+                    # We have not yet updated the .sln and .vcxproj files for
+                    # VS 2017. Until we do, those projects and their build
+                    # outputs will be found in the same places as before.
+                    verdir="vc2019"
+                    ;;
                 *)
                     echo "Unknown AUTOBUILD_VSVER = '$AUTOBUILD_VSVER'" 1>&2 ; exit 1
                     ;;
             esac
 
-            build_sln "builds/win32/$verdir/freetype.sln" "LIB Release|$AUTOBUILD_WIN_VSPLATFORM"
+            build_sln "builds/windows/$verdir/freetype.sln" "Debug" "$AUTOBUILD_WIN_VSPLATFORM"
+            build_sln "builds/windows/$verdir/freetype.sln" "Release" "$AUTOBUILD_WIN_VSPLATFORM"
 
+            mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
-            cp -a "objs/win32/$verdir"/freetype*.lib "$stage/lib/release/freetype.lib"
+            cp -a "objs/$outdir/Debug"/freetype.{lib,dll,exp,pdb} "$stage/lib/debug/"
+            cp -a "objs/$outdir/Release"/freetype.{lib,dll,exp,pdb} "$stage/lib/release/"
 
-            mkdir -p "$stage/include/freetype2/"
+            mkdir -p "$stage/include/freetype/"
             cp -a include/ft2build.h "$stage/include/"
-            cp -a include/freetype "$stage/include/freetype2/"
+            cp -a include/freetype "$stage/include/"
         ;;
 
         darwin*)
