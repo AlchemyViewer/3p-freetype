@@ -37,6 +37,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}</ProjectGuid>
     <RootNamespace>FreeType</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="PlatformToolset">
@@ -155,7 +156,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4001</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -181,12 +182,14 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableLanguageExtensions>true</DisableLanguageExtensions>
       <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4001</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -284,6 +287,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalOptions>/Ob3 %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -310,13 +315,14 @@
       <DisableSpecificWarnings>4001</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalOptions>/Ob3 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>$(UserLibraryDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(UserDependencies);%(AdditionalDependencies)</AdditionalDependencies>

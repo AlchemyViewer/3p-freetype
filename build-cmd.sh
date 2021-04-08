@@ -46,45 +46,45 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         windows*)
             load_vsvars
 
-            if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
-            then
-                outdir="Win32"
-            else
-                outdir="x64"
-            fi
-
-            case "$AUTOBUILD_WIN_VSVER" in
-                "120")
-                    verdir="vc2013"
-                    ;;
-                "150")
-                    # We have not yet updated the .sln and .vcxproj files for
-                    # VS 2017. Until we do, those projects and their build
-                    # outputs will be found in the same places as before.
-                    verdir="vc2013"
-                    ;;
-                16*)
-                    # We have not yet updated the .sln and .vcxproj files for
-                    # VS 2017. Until we do, those projects and their build
-                    # outputs will be found in the same places as before.
-                    verdir="vc2019"
-                    ;;
-                *)
-                    echo "Unknown AUTOBUILD_VSVER = '$AUTOBUILD_VSVER'" 1>&2 ; exit 1
-                    ;;
-            esac
-
-            build_sln "builds/windows/$verdir/freetype.sln" "Debug" "$AUTOBUILD_WIN_VSPLATFORM"
-            build_sln "builds/windows/$verdir/freetype.sln" "Release" "$AUTOBUILD_WIN_VSPLATFORM"
-
+            mkdir -p "$stage/include/freetype"
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
-            cp -a "objs/$outdir/Debug"/freetype.{lib,dll,exp,pdb} "$stage/lib/debug/"
-            cp -a "objs/$outdir/Release"/freetype.{lib,dll,exp,pdb} "$stage/lib/release/"
 
-            mkdir -p "$stage/include/freetype/"
             cp -a include/ft2build.h "$stage/include/"
             cp -a include/freetype "$stage/include/"
+
+            mkdir -p "build_debug"
+            pushd "build_debug"
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" -T host="$AUTOBUILD_WIN_VSHOST" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DFT_WITH_ZLIB=ON -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/debug/zlibd.lib" -DZLIB_LIBRARY_DIRS="$(cygpath -m $stage)/packages/lib"
+
+                cmake --build . --config Debug --clean-first
+
+                # conditionally run unit tests
+                #if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                #    ctest -C Debug
+                #fi
+
+                cp -a "Debug/freetyped.lib" "$stage/lib/debug/"
+            popd
+
+            mkdir -p "build_release"
+            pushd "build_release"
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" -T host="$AUTOBUILD_WIN_VSHOST" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DFT_WITH_ZLIB=ON -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/release/zlib.lib" -DZLIB_LIBRARY_DIRS="$(cygpath -m $stage)/packages/lib"
+
+                cmake --build . --config Release --clean-first
+
+                # conditionally run unit tests
+                #if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                #    ctest -C Release
+                #fi
+
+                cp -a "Release/freetype.lib" "$stage/lib/release/"
+                cp -a include/freetype/config/*.h "$stage/include/freetype/config/"
+            popd
         ;;
 
         darwin*)

@@ -208,32 +208,22 @@ endif ()
 set(HARFBUZZ_MIN_VERSION "1.8.0")
 if (FT_WITH_HARFBUZZ)
   find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION} REQUIRED)
-else ()
-  find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION})
 endif ()
 
 if (FT_WITH_PNG)
   find_package(PNG REQUIRED)
-else ()
-  find_package(PNG)
 endif ()
 
 if (FT_WITH_ZLIB)
-  find_package(ZLIB REQUIRED)
-else ()
-  find_package(ZLIB)
+  set(ZLIB_FOUND ON)
 endif ()
 
 if (FT_WITH_BZIP2)
   find_package(BZip2 REQUIRED)
-else ()
-  find_package(BZip2)
 endif ()
 
 if (FT_WITH_BROTLI)
   find_package(BrotliDec REQUIRED)
-else ()
-  find_package(BrotliDec)
 endif ()
 
 # Create the configuration file
@@ -469,6 +459,12 @@ if (BROTLIDEC_FOUND)
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libbrotlidec")
 endif ()
 
+# <ALCHEMY>
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+    target_compile_options(freetype PRIVATE /std:c++17 /permissive- /Z7 $<$<CONFIG:Release>:/Ob3> $<$<CONFIG:Release>:/Gy> $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},4>:/arch:SSE2>)
+    target_link_options(freetype PRIVATE /DEBUG:FULL $<$<CONFIG:Release>:/OPT:REF> $<$<CONFIG:Release>:/OPT:ICF>)
+endif()
+# </ALCHEMY>
 
 # Installation
 include(GNUInstallDirs)
