@@ -147,7 +147,7 @@ project(freetype C)
 
 set(VERSION_MAJOR "2")
 set(VERSION_MINOR "10")
-set(VERSION_PATCH "2")
+set(VERSION_PATCH "4")
 
 # Generate LIBRARY_VERSION and LIBRARY_SOVERSION.
 set(LIBTOOL_REGEX "version_info='([0-9]+):([0-9]+):([0-9]+)'")
@@ -208,41 +208,30 @@ endif ()
 set(HARFBUZZ_MIN_VERSION "1.8.0")
 if (FT_WITH_HARFBUZZ)
   find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION} REQUIRED)
-else ()
-  find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION})
 endif ()
 
 if (FT_WITH_PNG)
   find_package(PNG REQUIRED)
-else ()
-  find_package(PNG)
 endif ()
 
 if (FT_WITH_ZLIB)
-  find_package(ZLIB REQUIRED)
-else ()
-  find_package(ZLIB)
+  set(ZLIB_FOUND ON)
 endif ()
 
 if (FT_WITH_BZIP2)
   find_package(BZip2 REQUIRED)
-else ()
-  find_package(BZip2)
 endif ()
 
 if (FT_WITH_BROTLI)
   find_package(BrotliDec REQUIRED)
-else ()
-  find_package(BrotliDec)
 endif ()
 
 # Create the configuration file
 if (UNIX)
   check_include_file("unistd.h" HAVE_UNISTD_H)
   check_include_file("fcntl.h" HAVE_FCNTL_H)
-  check_include_file("stdint.h" HAVE_STDINT_H)
 
-  file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in"
+  file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.h.in"
     FTCONFIG_H)
   if (HAVE_UNISTD_H)
     string(REGEX REPLACE
@@ -254,13 +243,6 @@ if (UNIX)
       "#undef +(HAVE_FCNTL_H)" "#define \\1 1"
       FTCONFIG_H "${FTCONFIG_H}")
   endif ()
-  if (HAVE_STDINT_H)
-    string(REGEX REPLACE
-      "#undef +(HAVE_STDINT_H)" "#define \\1 1"
-      FTCONFIG_H "${FTCONFIG_H}")
-  endif ()
-  string(REPLACE "/undef " "#undef "
-    FTCONFIG_H "${FTCONFIG_H}")
 else ()
   file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h"
     FTCONFIG_H)
@@ -477,6 +459,12 @@ if (BROTLIDEC_FOUND)
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libbrotlidec")
 endif ()
 
+# <ALCHEMY>
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+    target_compile_options(freetype PRIVATE /std:c++17 /permissive- /Z7 $<$<CONFIG:Release>:/Ob3> $<$<CONFIG:Release>:/Gy> $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},4>:/arch:SSE2>)
+    target_link_options(freetype PRIVATE /DEBUG:FULL $<$<CONFIG:Release>:/OPT:REF> $<$<CONFIG:Release>:/OPT:ICF>)
+endif()
+# </ALCHEMY>
 
 # Installation
 include(GNUInstallDirs)
@@ -535,6 +523,12 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       COMPONENT pkgconfig)
   endif ()
 
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    ${PROJECT_BINARY_DIR}/freetype-config-version.cmake
+    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}
+    COMPATIBILITY SameMajorVersion)
+
   install(
     TARGETS freetype
       EXPORT freetype-targets
@@ -548,6 +542,10 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
       FILE freetype-config.cmake
       COMPONENT headers)
+  install(
+    FILES ${PROJECT_BINARY_DIR}/freetype-config-version.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
+    COMPONENT headers)
 endif ()
 
 
