@@ -254,13 +254,13 @@ endif ()
 
 if (NOT FT_DISABLE_PNG)
   if (FT_REQUIRE_PNG)
-    find_package(PNG REQUIRED)
+    set(PNG_FOUND ON)
   endif ()
 endif ()
 
 if (NOT FT_DISABLE_ZLIB)
   if (FT_REQUIRE_ZLIB)
-  set(ZLIB_FOUND ON)
+    set(ZLIB_FOUND ON)
   endif ()
 endif ()
 
