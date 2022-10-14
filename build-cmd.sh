@@ -39,51 +39,70 @@ patch_version="$(sed -n -E 's/#[[:space:]]*define[[:space:]]+FREETYPE_PATCH[[:sp
 version="${major_version}.${minor_version}.${patch_version}"
 echo "${version}" > "${stage}/VERSION.txt"
 
+# create staging dir structure
+mkdir -p "$stage/include/freetype2"
+mkdir -p "$stage/lib/debug"
+mkdir -p "$stage/lib/release"
+
 pushd "$FREETYPELIB_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
         windows*)
             load_vsvars
 
-            mkdir -p "$stage/include/freetype"
-            mkdir -p "$stage/lib/debug"
-            mkdir -p "$stage/lib/release"
-
-            cp -a include/ft2build.h "$stage/include/"
-            cp -a include/freetype "$stage/include/"
-
             mkdir -p "build_debug"
             pushd "build_debug"
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" -T host="$AUTOBUILD_WIN_VSHOST" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
-                    -DFT_REQUIRE_ZLIB=ON -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
-                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/debug/zlibd.lib" -DZLIB_LIBRARY_DIRS="$(cygpath -m $stage)/packages/lib"
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)/debug" \
+                    -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/debug/zlibd.lib" \
+                    -DPNG_INCLUDE_DIRS="$(cygpath -m ${stage})/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="$(cygpath -m ${stage})/packages/lib/debug/libpng16d.lib"
+
 
                 cmake --build . --config Debug --clean-first
+                cmake --install . --config Debug
 
                 # conditionally run unit tests
                 #if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
                 #    ctest -C Debug
                 #fi
-
-                cp -a "Debug/freetyped.lib" "$stage/lib/debug/"
             popd
 
             mkdir -p "build_release"
             pushd "build_release"
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" -T host="$AUTOBUILD_WIN_VSHOST" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
-                    -DFT_REQUIRE_ZLIB=ON -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
-                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/release/zlib.lib" -DZLIB_LIBRARY_DIRS="$(cygpath -m $stage)/packages/lib"
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)/release" \
+                    -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DZLIB_INCLUDE_DIRS="$(cygpath -m $stage)/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="$(cygpath -m $stage)/packages/lib/release/zlib.lib" \
+                    -DPNG_INCLUDE_DIRS="$(cygpath -m ${stage})/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="$(cygpath -m ${stage})/packages/lib/release/libpng16.lib"
 
                 cmake --build . --config Release --clean-first
+                cmake --install . --config Release
 
                 # conditionally run unit tests
                 #if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
                 #    ctest -C Release
                 #fi
-
-                cp -a "Release/freetype.lib" "$stage/lib/release/"
-                cp -a include/freetype/config/*.h "$stage/include/freetype/config/"
             popd
+
+            # Copy libraries
+            cp -a ${stage}/debug/lib/*.lib ${stage}/lib/debug/
+            cp -a ${stage}/release/lib/*.lib ${stage}/lib/release/
+
+            # copy headers
+            cp -a $stage/release/include/freetype2/* $stage/include/freetype2/
         ;;
 
         darwin*)
@@ -136,6 +155,12 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                     -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug_x86" \
                     -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/debug/libpng16d.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
                     -DZLIB_LIBRARIES="${stage}/packages/lib/debug/libz.a" \
                     -DZLIB_LIBRARY_DIRS="${stage}/packages/lib"
@@ -173,6 +198,12 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                     -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/release_x86" \
                     -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/release/libpng16.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
                     -DZLIB_LIBRARIES="${stage}/packages/lib/release/libz.a" \
                     -DZLIB_LIBRARY_DIRS="${stage}/packages/lib"
@@ -212,6 +243,12 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                     -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug_arm64" \
                     -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/debug/libpng16d.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
                     -DZLIB_LIBRARIES="${stage}/packages/lib/debug/libz.a" \
                     -DZLIB_LIBRARY_DIRS="${stage}/packages/lib"
@@ -248,6 +285,12 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                     -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/release_arm64" \
                     -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/release/libpng16.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
                     -DZLIB_LIBRARIES="${stage}/packages/lib/release/libz.a" \
                     -DZLIB_LIBRARY_DIRS="${stage}/packages/lib"
@@ -261,11 +304,6 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                 fi
             popd
 
-            # create staging dir structure
-            mkdir -p "$stage/include/freetype2"
-            mkdir -p "$stage/lib/debug"
-            mkdir -p "$stage/lib/release"
-
             # create fat libraries
             lipo -create ${stage}/debug_x86/lib/libfreetyped.a ${stage}/debug_arm64/lib/libfreetyped.a -output ${stage}/lib/debug/libfreetyped.a
             lipo -create ${stage}/release_x86/lib/libfreetype.a ${stage}/release_arm64/lib/libfreetype.a -output ${stage}/lib/release/libfreetype.a
@@ -275,21 +313,6 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         ;;
 
         linux*)
-            # Linux build environment at Linden comes pre-polluted with stuff that can
-            # seriously damage 3rd-party builds.  Environmental garbage you can expect
-            # includes:
-            #
-            #    DISTCC_POTENTIAL_HOSTS     arch           root        CXXFLAGS
-            #    DISTCC_LOCATION            top            branch      CC
-            #    DISTCC_HOSTS               build_name     suffix      CXX
-            #    LSDISTCC_ARGS              repo           prefix      CFLAGS
-            #    cxx_version                AUTOBUILD      SIGN        CPPFLAGS
-            #
-            # So, clear out bits that shouldn't affect our configure-directed build
-            # but which do nonetheless.
-            #
-            unset DISTCC_HOSTS CC CXX CFLAGS CPPFLAGS CXXFLAGS
-
             # Default target per autobuild build --address-size
             opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE}"
 			DEBUG_COMMON_FLAGS="$opts -Og -g -fPIC -DPIC"
@@ -301,63 +324,66 @@ pushd "$FREETYPELIB_SOURCE_DIR"
             DEBUG_CPPFLAGS="-DPIC"
 			RELEASE_CPPFLAGS="-DPIC -D_FORTIFY_SOURCE=2"
 
-            # Handle any deliberate platform targeting
-            if [ -z "${TARGET_CPPFLAGS:-}" ]; then
-                # Remove sysroot contamination from build environment
-                unset CPPFLAGS
-            else
-                # Incorporate special pre-processing flags
-                export CPPFLAGS="$TARGET_CPPFLAGS"
-            fi
+            mkdir -p "build_debug"
+            pushd "build_debug"
+                CFLAGS="$DEBUG_CFLAGS" \
+                CPPFLAGS="$DEBUG_CPPFLAGS" \
+                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_COMPAT:BOOL=ON \
+                    -DCMAKE_BUILD_TYPE="Debug" \
+                    -DCMAKE_C_FLAGS="$DEBUG_CFLAGS" \
+                    -DCMAKE_INSTALL_PREFIX="$stage/debug" \
+                    -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/debug/libpng16d.a" \
+                    -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="${stage}/packages/lib/debug/libz.a"
 
-            # Fix up path for pkgconfig
-            if [ -d "$stage/packages/lib/release/pkgconfig" ]; then
-                fix_pkgconfig_prefix "$stage/packages"
-            fi
+                cmake --build . --config Debug
+                cmake --install . --config Debug
 
-            OLD_PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+                # conditionally run unit tests
+                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                    ctest -C Debug
+                fi
+            popd
 
-            # debug configure and build
-            export PKG_CONFIG_PATH="$stage/packages/lib/debug/pkgconfig:${OLD_PKG_CONFIG_PATH}"
+            mkdir -p "build_release"
+            pushd "build_release"
+                CFLAGS="$RELEASE_CFLAGS" \
+                CPPFLAGS="$RELEASE_CPPFLAGS" \
+                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_COMPAT:BOOL=ON \
+                    -DCMAKE_BUILD_TYPE="Release" \
+                    -DCMAKE_C_FLAGS="$RELEASE_CFLAGS" \
+                    -DCMAKE_INSTALL_PREFIX="$stage/release" \
+                    -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/release/libpng16.a" \
+                    -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
+                    -DZLIB_LIBRARIES="${stage}/packages/lib/release/libz.a"
 
-            # build the debug version and link against the debug zlib
-            CFLAGS="$DEBUG_CFLAGS" \
-                CXXFLAGS="$DEBUG_CXXFLAGS" \
-                CPPFLAGS="${CPPFLAGS:-} ${DEBUG_CPPFLAGS} -I$stage/packages/include/zlib" \
-                LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --enable-shared=no --with-pic --with-zlib=yes \
-                    --prefix="\${AUTOBUILD_PACKAGES_DIR}" --libdir="\${prefix}/lib/debug"
-            make
-            make install DESTDIR="$stage"
+                cmake --build . --config Release
+                cmake --install . --config Release
 
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                # make test
-                echo "No tests"
-            fi
+                # conditionally run unit tests
+                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                    ctest -C Release
+                fi
+            popd
 
-            make distclean
+            # Copy libraries
+            cp -a ${stage}/debug/lib/*.a ${stage}/lib/debug/
+            cp -a ${stage}/release/lib/*.a ${stage}/lib/release/
 
-            # release configure and build
-            export PKG_CONFIG_PATH="$stage/packages/lib/release/pkgconfig:${OLD_PKG_CONFIG_PATH}"
-
-            # build the release version and link against the release zlib
-            CFLAGS="$RELEASE_CFLAGS" \
-                CXXFLAGS="$RELEASE_CXXFLAGS" \
-                CPPFLAGS="${CPPFLAGS:-} ${RELEASE_CPPFLAGS} -I$stage/packages/include/zlib" \
-                LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --enable-shared=no --with-pic --with-zlib=yes \
-                    --prefix="\${AUTOBUILD_PACKAGES_DIR}" --libdir="\${prefix}/lib/release"
-            make
-            make install DESTDIR="$stage"
-
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                # make test
-                echo "No tests"
-            fi
-
-            make distclean
+            # copy headers
+            cp -a $stage/release/include/freetype2/* $stage/include/freetype2/
         ;;
     esac
     mkdir -p "$stage/LICENSES"
