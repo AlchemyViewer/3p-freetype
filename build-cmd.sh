@@ -328,7 +328,7 @@ pushd "$FREETYPELIB_SOURCE_DIR"
             pushd "build_debug"
                 CFLAGS="$DEBUG_CFLAGS" \
                 CPPFLAGS="$DEBUG_CPPFLAGS" \
-                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_COMPAT:BOOL=ON \
+                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_BUILD_TYPE="Debug" \
                     -DCMAKE_C_FLAGS="$DEBUG_CFLAGS" \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug" \
@@ -355,7 +355,7 @@ pushd "$FREETYPELIB_SOURCE_DIR"
             pushd "build_release"
                 CFLAGS="$RELEASE_CFLAGS" \
                 CPPFLAGS="$RELEASE_CPPFLAGS" \
-                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF -DZLIB_COMPAT:BOOL=ON \
+                cmake .. -GNinja -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_BUILD_TYPE="Release" \
                     -DCMAKE_C_FLAGS="$RELEASE_CFLAGS" \
                     -DCMAKE_INSTALL_PREFIX="$stage/release" \
