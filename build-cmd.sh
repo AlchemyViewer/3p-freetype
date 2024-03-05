@@ -474,7 +474,7 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_debug_temp"
                 CFLAGS="$DEBUG_CFLAGS" \
                 CPPFLAGS="$DEBUG_CPPFLAGS" \
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug_temp" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/debug_temp/include/freetype2/" \
@@ -488,7 +488,7 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_release_temp"
                 CFLAGS="$RELEASE_CFLAGS" \
                 CPPFLAGS="$RELEASE_CPPFLAGS" \
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_INSTALL_PREFIX="$stage/release_temp" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/release_temp/include/freetype2/" \
@@ -564,7 +564,7 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_debug"
                 CFLAGS="$DEBUG_CFLAGS" \
                 CPPFLAGS="$DEBUG_CPPFLAGS" \
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/debug/include/freetype2/" \
@@ -578,7 +578,7 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_release"
                 CFLAGS="$RELEASE_CFLAGS" \
                 CPPFLAGS="$RELEASE_CPPFLAGS" \
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_INSTALL_PREFIX="$stage/release" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/release/include/freetype2/" \
@@ -594,7 +594,7 @@ case "$AUTOBUILD_PLATFORM" in
         cp -a ${stage}/release/lib/*.a ${stage}/lib/release/
 
         # copy headers
-        cp -a $stage/release/include/freetype2/* $stage/include/freetype2/
+        cp -a $stage/release/include/* $stage/include/
     ;;
 esac
 
