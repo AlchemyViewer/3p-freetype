@@ -308,9 +308,26 @@ case "$AUTOBUILD_PLATFORM" in
         pushd "$HARFBUZZ_SOURCE_DIR"
             mkdir -p "build_debug_x86_temp"
             pushd "build_debug_x86_temp"
-                CFLAGS="$DEBUG_CFLAGS" \
+                CFLAGS="$ARCH_FLAGS_X86 $DEBUG_CFLAGS" \
+                CXXFLAGS="$ARCH_FLAGS_X86 $DEBUG_CXXFLAGS" \
                 CPPFLAGS="$DEBUG_CPPFLAGS" \
-                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                LDFLAGS="$ARCH_FLAGS_X86 $DEBUG_LDFLAGS" \
+                cmake .. -GXcode -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DCMAKE_C_FLAGS="$ARCH_FLAGS_X86 $DEBUG_CFLAGS" \
+                    -DCMAKE_CXX_FLAGS="$ARCH_FLAGS_X86 $DEBUG_CXXFLAGS" \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL="0" \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_FAST_MATH=NO \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS=YES \
+                    -DCMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT=dwarf \
+                    -DCMAKE_XCODE_ATTRIBUTE_LLVM_LTO=NO \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_X86_VECTOR_INSTRUCTIONS=sse4.2 \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD="c++17" \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY="libc++" \
+                    -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY="" \
+                    -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 \
+                    -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
+                    -DCMAKE_OSX_SYSROOT=${SDKROOT} \
+                    -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/debug_x86_temp" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/debug_x86_temp/include/freetype2/" \
@@ -322,9 +339,26 @@ case "$AUTOBUILD_PLATFORM" in
 
             mkdir -p "build_release_x86_temp"
             pushd "build_release_x86_temp"
-                CFLAGS="$RELEASE_CFLAGS" \
+                CFLAGS="$ARCH_FLAGS_X86 $RELEASE_CFLAGS" \
+                CXXFLAGS="$ARCH_FLAGS_X86 $RELEASE_CXXFLAGS" \
                 CPPFLAGS="$RELEASE_CPPFLAGS" \
-                cmake -GNinja .. -DBUILD_SHARED_LIBS:BOOL=OFF \
+                LDFLAGS="$ARCH_FLAGS_X86 $RELEASE_LDFLAGS" \
+                cmake .. -GXcode -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DCMAKE_C_FLAGS="$ARCH_FLAGS_X86 $RELEASE_CFLAGS" \
+                    -DCMAKE_CXX_FLAGS="$ARCH_FLAGS_X86 $RELEASE_CXXFLAGS" \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL="3" \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_FAST_MATH=NO \
+                    -DCMAKE_XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS=YES \
+                    -DCMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT=dwarf \
+                    -DCMAKE_XCODE_ATTRIBUTE_LLVM_LTO=NO \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_X86_VECTOR_INSTRUCTIONS=sse4.2 \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD="c++17" \
+                    -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY="libc++" \
+                    -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY="" \
+                    -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 \
+                    -DCMAKE_OSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
+                    -DCMAKE_OSX_SYSROOT=${SDKROOT} \
+                    -DCMAKE_MACOSX_RPATH=YES \
                     -DCMAKE_INSTALL_PREFIX="$stage/release_x86_temp" \
                     -DHB_HAVE_FREETYPE=ON \
                     -DFREETYPE_INCLUDE_DIRS="$stage/release_x86_temp/include/freetype2/" \
