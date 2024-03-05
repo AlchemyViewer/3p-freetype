@@ -123,6 +123,7 @@ endif ()
 
 if (MSVC)
   add_definitions(-wd4244 -wd4267 -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS)
+  add_compile_options(/bigobj)
 endif ()
 
 
@@ -195,10 +196,10 @@ set (subset_project_headers ${HB_SUBSET_headers})
 
 ## Find and include needed header folders and libraries
 if (HB_HAVE_FREETYPE AND NOT TARGET freetype)
-  include (FindFreetype)
-  if (NOT FREETYPE_FOUND)
-    message(FATAL_ERROR "HB_HAVE_FREETYPE was set, but we failed to find it. Maybe add a CMAKE_PREFIX_PATH= to your Freetype2 install prefix")
-  endif ()
+#  include (FindFreetype)
+#  if (NOT FREETYPE_FOUND)
+#    message(FATAL_ERROR "HB_HAVE_FREETYPE was set, but we failed to find it. Maybe add a CMAKE_PREFIX_PATH= to your Freetype2 install prefix")
+#  endif ()
 
   list(APPEND THIRD_PARTY_LIBS ${FREETYPE_LIBRARIES})
   include_directories(AFTER ${FREETYPE_INCLUDE_DIRS})

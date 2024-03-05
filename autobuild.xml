@@ -160,6 +160,7 @@
           <array>
             <string>include/*</string>
             <string>LICENSES/freetype.txt</string>
+            <string>LICENSES/harfbuzz.txt</string>
 </array>
           <key>build_directory</key>
           <string>stage</string>
