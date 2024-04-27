@@ -16,11 +16,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>34b171bdb2806c4cbf22431b7ac87e3028bd15475888202e254a7464831c6c607e2a773e18a767b8192f8c9253a19e362ecd013b96944e6c46fcd29b7a179492</string>
+              <string>0fdab35c7594a07006f06a7b86e49873373f7cf7a98ecfc655e7d70c2f6680e6d222e187cf1a5d2e354c959f122f21adbe315dfa2871ffcfa05ebe1c9c553b27</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2354/libpng-1.6.42-darwin64-2354.tar.zst</string>
+              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2467/libpng-1.6.42-darwin64-2467.tar.zst</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -30,11 +30,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>55e70b352e7bf85e1e87e790bd1d6e7e037773f27776b6ae1e13c36476187047a4d61d91d63b9c755b4616ed4086395961f3fae0386bdc8079ca94b9262d4fdb</string>
+              <string>313e2440e930aed0573337888842a4a253e96a2a4c1137a83ea3ae18faa582656ab3aabecffcc667d3524a2b870a33d644ff6212f2cca5600f6244f95b0206ec</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2354/libpng-1.6.42-linux64-2354.tar.zst</string>
+              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2467/libpng-1.6.42-linux64-2467.tar.zst</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -44,11 +44,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5f288cd94adde28044af9d23ba0bfea031c95f3a6bcbc4de0d28dd776eb7fb78af266d8e8ad4a4aa5d3733eec667fa0f3122233ca0a91cea6b537b37a949cbbb</string>
+              <string>51b32721c16cdfef6732fe8f38bea5fd65dbafd2ee2d3a9b70fe91820ad8cca788e44f8bbe1400657024c7b7752f94c59b718c4d40f01ee7c43b9f7ce44869d3</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2354/libpng-1.6.42-windows64-2354.tar.zst</string>
+              <string>https://git.alchemyviewer.org/api/v4/projects/93/packages/generic/libpng/1.6.42.2467/libpng-1.6.42-windows64-2467.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
