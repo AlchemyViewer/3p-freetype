@@ -382,7 +382,6 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_release_arm64"
                 CFLAGS="$C_OPTS_ARM64" \
                 CXXFLAGS="$CXX_OPTS_ARM64" \
-                CPPFLAGS="$RELEASE_CPPFLAGS" \
                 LDFLAGS="$LINK_OPTS_ARM64" \
                 cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_C_FLAGS="$C_OPTS_ARM64" \
@@ -419,7 +418,6 @@ case "$AUTOBUILD_PLATFORM" in
             pushd "build_release_arm64"
                 CFLAGS="$C_OPTS_ARM64" \
                 CXXFLAGS="$CXX_OPTS_ARM64" \
-                CPPFLAGS="$RELEASE_CPPFLAGS" \
                 LDFLAGS="$LINK_OPTS_ARM64" \
                 cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_C_FLAGS="$C_OPTS_ARM64" \
