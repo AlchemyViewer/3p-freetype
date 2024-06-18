@@ -42,14 +42,14 @@ patch_version="$(sed -n -E 's/#[[:space:]]*define[[:space:]]+FREETYPE_PATCH[[:sp
 version="${major_version}.${minor_version}.${patch_version}"
 echo "${version}" > "${stage}/VERSION.txt"
 
-# create staging dir structure
-mkdir -p "$stage/include/freetype2"
-mkdir -p "$stage/lib/debug"
-mkdir -p "$stage/lib/release"
-
 case "$AUTOBUILD_PLATFORM" in
     windows*)
         load_vsvars
+
+        # create staging dir structure
+        mkdir -p "$stage/include/freetype2"
+        mkdir -p "$stage/lib/debug"
+        mkdir -p "$stage/lib/release"
 
         pushd "$FREETYPELIB_SOURCE_DIR"
             mkdir -p "build_debug_temp"
@@ -202,6 +202,10 @@ case "$AUTOBUILD_PLATFORM" in
 
         # deploy target
         export MACOSX_DEPLOYMENT_TARGET=${LL_BUILD_DARWIN_BASE_DEPLOY_TARGET}
+
+        # create staging dir structure
+        mkdir -p "$stage/include/freetype2"
+        mkdir -p "$stage/lib/release"
 
         pushd "$FREETYPELIB_SOURCE_DIR"
             mkdir -p "build_release_x86_temp"
@@ -434,11 +438,8 @@ case "$AUTOBUILD_PLATFORM" in
         popd
 
         # create fat libraries
-        lipo -create ${stage}/debug_x86/lib/libfreetyped.a ${stage}/debug_arm64/lib/libfreetyped.a -output ${stage}/lib/debug/libfreetyped.a
         lipo -create ${stage}/release_x86/lib/libfreetype.a ${stage}/release_arm64/lib/libfreetype.a -output ${stage}/lib/release/libfreetype.a
-        lipo -create ${stage}/debug_x86/lib/libharfbuzz.a ${stage}/debug_arm64/lib/libharfbuzz.a -output ${stage}/lib/debug/libharfbuzz.a
         lipo -create ${stage}/release_x86/lib/libharfbuzz.a ${stage}/release_arm64/lib/libharfbuzz.a -output ${stage}/lib/release/libharfbuzz.a
-        lipo -create ${stage}/debug_x86/lib/libharfbuzz-subset.a ${stage}/debug_arm64/lib/libharfbuzz-subset.a -output ${stage}/lib/debug/libharfbuzz-subset.a
         lipo -create ${stage}/release_x86/lib/libharfbuzz-subset.a ${stage}/release_arm64/lib/libharfbuzz-subset.a -output ${stage}/lib/release/libharfbuzz-subset.a
 
         # copy headers
@@ -473,6 +474,10 @@ case "$AUTOBUILD_PLATFORM" in
             # Incorporate special pre-processing flags
             export CPPFLAGS="$TARGET_CPPFLAGS"
         fi
+
+        # create staging dir structure
+        mkdir -p "$stage/include"
+        mkdir -p "$stage/lib"
 
         pushd "$FREETYPELIB_SOURCE_DIR"
             mkdir -p "build_release_temp"
@@ -558,8 +563,8 @@ case "$AUTOBUILD_PLATFORM" in
                     -DCMAKE_C_FLAGS="$opts_c" \
                     -DCMAKE_INSTALL_PREFIX="$stage" \
                     -DHB_HAVE_FREETYPE=ON \
-                    -DFREETYPE_INCLUDE_DIRS="$stage/release/include/freetype2/" \
-                    -DFREETYPE_LIBRARIES="$stage/release/lib/libfreetype.a"
+                    -DFREETYPE_INCLUDE_DIRS="$stage/include/freetype2/" \
+                    -DFREETYPE_LIBRARIES="$stage/lib/libfreetype.a"
 
                 cmake --build . --config Release
                 cmake --install . --config Release
