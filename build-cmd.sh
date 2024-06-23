@@ -32,8 +32,6 @@ source_environment_tempfile="$stage/source_environment.sh"
 "$autobuild" source_environment > "$source_environment_tempfile"
 . "$source_environment_tempfile"
 
-[ -f "$stage"/packages/include/zlib/zlib.h ] || fail "You haven't installed packages yet."
-
 # extract APR version into VERSION.txt
 FREETYPE_INCLUDE_DIR="${FREETYPELIB_SOURCE_DIR}/include/freetype"
 major_version="$(sed -n -E 's/#[[:space:]]*define[[:space:]]+FREETYPE_MAJOR[[:space:]]+([0-9]+)/\1/p' "${FREETYPE_INCLUDE_DIR}/freetype.h")"
@@ -491,9 +489,9 @@ case "$AUTOBUILD_PLATFORM" in
                     -DFT_DISABLE_BZIP2=ON \
                     -DFT_DISABLE_BROTLI=ON \
                     -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
-                    -DPNG_LIBRARIES="${stage}/packages/lib/release/libpng16.a" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/libpng16.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
-                    -DZLIB_LIBRARIES="${stage}/packages/lib/release/libz.a"
+                    -DZLIB_LIBRARIES="${stage}/packages/lib/libz.a"
 
                 cmake --build . --config Release
                 cmake --install . --config Release
@@ -536,9 +534,9 @@ case "$AUTOBUILD_PLATFORM" in
                     -DFT_DISABLE_BZIP2=ON \
                     -DFT_DISABLE_BROTLI=ON \
                     -DPNG_INCLUDE_DIRS="${stage}/packages/include/libpng16/" \
-                    -DPNG_LIBRARIES="${stage}/packages/lib/release/libpng16.a" \
+                    -DPNG_LIBRARIES="${stage}/packages/lib/libpng16.a" \
                     -DZLIB_INCLUDE_DIRS="${stage}/packages/include/zlib/" \
-                    -DZLIB_LIBRARIES="${stage}/packages/lib/release/libz.a" \
+                    -DZLIB_LIBRARIES="${stage}/packages/lib/libz.a" \
                     -DHarfBuzz_INCLUDE_DIRS="${stage}/release_temp/include/harfbuzz/" \
                     -DHarfBuzz_LIBRARY="${stage}/release_temp/lib/libharfbuzz.a"
 
