@@ -146,6 +146,3 @@ pushd "$FREETYPELIB_SOURCE_DIR"
     mkdir -p "$stage/LICENSES"
     cp LICENSE.TXT "$stage/LICENSES/freetype.txt"
 popd
-
-mkdir -p "$stage"/docs/freetype/
-cp -a README.Linden "$stage"/docs/freetype/
