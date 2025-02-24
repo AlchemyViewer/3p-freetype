@@ -29,8 +29,10 @@ source_environment_tempfile="$stage/source_environment.sh"
 "$autobuild" source_environment > "$source_environment_tempfile"
 . "$source_environment_tempfile"
 
-# remove_cxxstd
+# remove_cxxstd apply_patch
 source "$(dirname "$AUTOBUILD_VARIABLES_FILE")/functions"
+
+apply_patch "$top/patches/update-cmake-version-compat.patch" "$FREETYPELIB_SOURCE_DIR"
 
 [ -f "$stage"/packages/include/zlib-ng/zlib.h ] || fail "You haven't installed packages yet."
 
@@ -40,14 +42,42 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         windows*)
             load_vsvars
 
-            opts="$(replace_switch /Zi /Z7 $LL_BUILD_RELEASE)"
-            plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
+            mkdir -p "build_debug"
+            pushd "build_debug"
+                opts="$(replace_switch /Zi /Z7 $LL_BUILD_DEBUG)"
+                plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
 
-            mkdir -p "build"
-            pushd "build"
-                cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
+                cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" \
+                    -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_SHARED_LIBS:BOOL=OFF \
                     -DCMAKE_C_FLAGS:STRING="$plainopts" \
                     -DCMAKE_CXX_FLAGS:STRING="$opts" \
+                    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
+                    -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
+                    -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/debug")" \
+                    -DFT_REQUIRE_ZLIB=ON \
+                    -DFT_REQUIRE_PNG=ON \
+                    -DFT_DISABLE_HARFBUZZ=ON \
+                    -DFT_DISABLE_BZIP2=ON \
+                    -DFT_DISABLE_BROTLI=ON \
+                    -DZLIB_INCLUDE_DIR="$(cygpath -m "$stage/packages/include/zlib-ng/")" \
+                    -DZLIB_LIBRARY="$(cygpath -m "$stage/packages/lib/debug/zlibd.lib")" \
+                    -DPNG_PNG_INCLUDE_DIR="$(cygpath -m "${stage}/packages/include/libpng16/")" \
+                    -DPNG_LIBRARY="$(cygpath -m "${stage}/packages/lib/debug/libpng16.lib")"
+
+                cmake --build . --config Debug
+                cmake --install . --config Debug
+            popd
+
+            mkdir -p "build_release"
+            pushd "build_release"
+                opts="$(replace_switch /Zi /Z7 $LL_BUILD_RELEASE)"
+                plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
+
+                cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" \
+                    -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
+                    -DCMAKE_C_FLAGS:STRING="$plainopts" \
+                    -DCMAKE_CXX_FLAGS:STRING="$opts" \
+                    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
                     -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
                     -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/release")" \
                     -DFT_REQUIRE_ZLIB=ON \
