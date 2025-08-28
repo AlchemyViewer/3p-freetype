@@ -16,11 +16,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6c46de2f28d39bdaf0e33e889064cfddb74ad2b33bf8e2bdafcd268bb1cf014f932a4ead62326338554c3c542678f0fd41391f541d663ea601be950c21769bf4</string>
+              <string>bde0c540e65ab96e88bc1136693315582529926f739c5b69fd1d5be98a6ba936058b460214b3b8342f82a09b120f1802299bdfe552710fda15474c2ad3920a94</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.47-r2/libpng-1.6.47-r2-darwin64-13486678068.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.50-r1/libpng-1.6.50-r1-darwin64-17287190775.tar.zst</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -30,11 +30,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e75eab95f82c7bac202ddf5ee5e38bb49b4618d00d82ea1641841673d700ed7f33e50763c7cff5784972dba2e77c263e2530ae08c84159e6cc219ec1d6b1eed2</string>
+              <string>061d8b878dfba738f125315888ef382eea8d27dc8d518157fe59fe68d4cc7da3ea60e669036d2ffc2630b1de58af8847e9835b9f98a6c10bd576d08ddddc20e5</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.47-r2/libpng-1.6.47-r2-linux64-13486678068.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.50-r1/libpng-1.6.50-r1-linux64-17287190775.tar.zst</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -44,11 +44,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>52c92f539c273b8550cb9db6f358bd8e20aba48f0902a00fa7328b5236d2780e68aca53ee32cafe4fc21a0335bbcd60c12e3478f8dbd07d561034d964cc5e720</string>
+              <string>842d7fbf327f61d9a7a08fab3cf73cae1690c412c91c5c7bcbf7f77000db0b289ecac740f0e2a8e6e248ad5f2b4bbd2b03a12f8ecc31b4cb35c6f62b7185364b</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.47-r2/libpng-1.6.47-r2-windows64-13486678068.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-libpng/releases/download/v1.6.50-r1/libpng-1.6.50-r1-windows64-17287190775.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -61,7 +61,7 @@
         <key>copyright</key>
         <string>Copyright (c) 2004, 2006-2013 Glenn Randers-Pehrson</string>
         <key>version</key>
-        <string>1.6.47-r2</string>
+        <string>1.6.50-r1</string>
         <key>name</key>
         <string>libpng</string>
         <key>description</key>
@@ -76,11 +76,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ea8354aedf732fab3ae7e2931d493175c78f426657d465356b1d04ca75eee2e47dc5fca8910b6d2093819e8bfffab661a63803bee9eaabd1401860bf47b5c0fd</string>
+              <string>9f7d8340d62f81ec19715f630ffc0085c5be507533bfa3fa4373ae126eb1221a6efaf63f0fbea851bac314e0740f46e25ea6798f8972c57f72b1e996c07d6748</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.4-r3/zlib_ng-2.2.4.13485424982-darwin64-13485424982.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.5-r3/zlib_ng-2.2.5.17226175921-darwin64-17226175921.tar.zst</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -90,11 +90,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c123a43db118c5b44b99e299a98aa29f0d58edb3f5b874d6877770d0a95f53b99201cf03746381b9d506fcea2701f8a029854a3d30f4a4614e182e9ef88f0ff0</string>
+              <string>47192a51e5fb98bface14204e375b01925cbc5c0444ba1815a46027a3d47a23e176b01da50583307b54a04b79da78268730066ad757c26bbcd5d4f3a1e34b375</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.4-r3/zlib_ng-2.2.4.13485424982-linux64-13485424982.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.5-r3/zlib_ng-2.2.5.17226175921-linux64-17226175921.tar.zst</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -104,11 +104,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>52c2e385869d2ae4189eec525dc3980756a3d0acc74cae5754bf5c6441766a2c40b3b1fe25146ded8754581c3ad22638df52db67ff530f49d9160351ada3986c</string>
+              <string>c78169d1400c6dd35838b4f128614c92aa845d94d94aa2120c15cc4dc62b6c5c0b7d181f1e8acd0b4e311b677884ee346416bfed7d7f129c9212468cab78cb87</string>
               <key>hash_algorithm</key>
               <string>blake2b</string>
               <key>url</key>
-              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.4-r3/zlib_ng-2.2.4.13485424982-windows64-13485424982.tar.zst</string>
+              <string>https://github.com/AlchemyViewer/3p-zlib-ng/releases/download/v2.2.5-r3/zlib_ng-2.2.5.17226175921-windows64-17226175921.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -121,11 +121,79 @@
         <key>copyright</key>
         <string>Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler</string>
         <key>version</key>
-        <string>2.2.4.13485424982</string>
+        <string>2.2.5.17226175921</string>
         <key>name</key>
         <string>zlib-ng</string>
         <key>description</key>
         <string>zlib data compression library for the next generation systems</string>
+      </map>
+      <key>brotli</key>
+      <map>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>611bd6451f1fd2069300c5c0b4de1a235612d5647c1632484b71937d0a7e0c2f7ebcea562042a82582c7f0329cb960a5f595e49ccf80cd6165112d5fe14459b9</string>
+              <key>hash_algorithm</key>
+              <string>blake2b</string>
+              <key>url</key>
+              <string>https://github.com/AlchemyViewer/3p-brotli/releases/download/v1.1.0-r1/brotli-1.1.0-linux64-17287149281.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5b11eae3dd740f9232d56ea3b014599351ed9a2bdaf751e023b726159648401813662cc7274f1c647086ebdb014ebdae6827a86ec57ab1a021cf8a99560d3099</string>
+              <key>hash_algorithm</key>
+              <string>blake2b</string>
+              <key>url</key>
+              <string>https://github.com/AlchemyViewer/3p-brotli/releases/download/v1.1.0-r1/brotli-1.1.0-darwin64-17287149281.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>3bfc2caf73174a705bb281b73845e54165ca0d5230b381b7ee9c35d50b76b0f639df66609d5b104619b2c9aedb5d5abe39ffa6aeebf26a0f4c3a78e09c1725d8</string>
+              <key>hash_algorithm</key>
+              <string>blake2b</string>
+              <key>url</key>
+              <string>https://github.com/AlchemyViewer/3p-brotli/releases/download/v1.1.0-r1/brotli-1.1.0-windows64-17287149281.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>license</key>
+        <string>MIT</string>
+        <key>license_file</key>
+        <string>LICENSES/brotli.txt</string>
+        <key>copyright</key>
+        <string>Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.</string>
+        <key>version</key>
+        <string>1.1.0</string>
+        <key>name</key>
+        <string>brotli</string>
+        <key>vcs_branch</key>
+        <string>refs/tags/v1.1.0-r1</string>
+        <key>vcs_revision</key>
+        <string>b76310615a7ad7131825fa0c35d9b6999011dc03</string>
+        <key>vcs_url</key>
+        <string>git://github.com/AlchemyViewer/3p-brotli.git</string>
+        <key>canonical_repo</key>
+        <string>https://git.alchemyviewer.org/alchemy/thirdparty/3p-brotli</string>
+        <key>description</key>
+        <string>Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling.</string>
       </map>
     </map>
     <key>package_description</key>
