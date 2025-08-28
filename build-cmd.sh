@@ -141,13 +141,15 @@ pushd "$FREETYPELIB_SOURCE_DIR"
                         -DCMAKE_INSTALL_LIBDIR="$stage/lib/release/$arch" \
                         -DFT_REQUIRE_ZLIB=ON \
                         -DFT_REQUIRE_PNG=ON \
+                        -DFT_REQUIRE_BROTLI=ON \
                         -DFT_DISABLE_HARFBUZZ=ON \
                         -DFT_DISABLE_BZIP2=ON \
-                        -DFT_DISABLE_BROTLI=ON \
                         -DPNG_PNG_INCLUDE_DIR="${stage}/packages/include/libpng16/" \
                         -DPNG_LIBRARY="${stage}/packages/lib/release/libpng16.a" \
                         -DZLIB_INCLUDE_DIR="${stage}/packages/include/zlib-ng/" \
-                        -DZLIB_LIBRARY="${stage}/packages/lib/release/libz.a"
+                        -DZLIB_LIBRARY="${stage}/packages/lib/release/libz.a" \
+                        -DBROTLIDEC_INCLUDE_DIRS="${stage}/packages/include/" \
+                        -DBROTLIDEC_LIBRARIES="${stage}/packages/lib/release/libbrotlidec.a;${stage}/packages/lib/release/libbrotlicommon.a"
 
                     cmake --build . --config Release
                     cmake --install . --config Release
@@ -164,35 +166,43 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         ;;
 
         linux*)
-            # Default target per AUTOBUILD_ADDRSIZE
-            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD_RELEASE}"
-            plainopts="$(remove_cxxstd $opts)"
-
-            mkdir -p "build"
-            pushd "build"
-                cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
-                    -DCMAKE_C_FLAGS="$plainopts" \
-                    -DCMAKE_CXX_FLAGS="$opts" \
-                    -DCMAKE_INSTALL_PREFIX="$stage" \
-                    -DCMAKE_INSTALL_LIBDIR="$stage/lib/release" \
-                    -DFT_REQUIRE_ZLIB=ON \
-                    -DFT_REQUIRE_PNG=ON \
-                    -DFT_DISABLE_HARFBUZZ=ON \
-                    -DFT_DISABLE_BZIP2=ON \
-                    -DFT_DISABLE_BROTLI=ON \
-                    -DPNG_PNG_INCLUDE_DIR="${stage}/packages/include/libpng16/" \
-                    -DPNG_LIBRARY="${stage}/packages/lib/release/libpng16.a" \
-                    -DZLIB_INCLUDE_DIR="${stage}/packages/include/zlib-ng/" \
-                    -DZLIB_LIBRARY="${stage}/packages/lib/release/libz.a"
-
-                cmake --build . --config Release
-                cmake --install . --config Release
-
-                # conditionally run unit tests
-                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    ctest -C Release
+            for arch in sse avx2 ; do
+                # Default target per autobuild build --address-size
+                opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD_RELEASE}"
+                if [[ "$arch" == "avx2" ]]; then
+                    opts="$(replace_switch -march=x86-64-v2 -march=x86-64-v3 $opts)"
                 fi
-            popd
+                plainopts="$(remove_cxxstd $opts)"
+
+                # Release
+                mkdir -p "build_$arch"
+                pushd "build_$arch"
+                    cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
+                        -DCMAKE_C_FLAGS="$plainopts" \
+                        -DCMAKE_CXX_FLAGS="$opts" \
+                        -DCMAKE_INSTALL_PREFIX="$stage" \
+                        -DCMAKE_INSTALL_LIBDIR="$stage/lib/$arch/release" \
+                        -DFT_REQUIRE_ZLIB=ON \
+                        -DFT_REQUIRE_PNG=ON \
+                        -DFT_REQUIRE_BROTLI=ON \
+                        -DFT_DISABLE_HARFBUZZ=ON \
+                        -DFT_DISABLE_BZIP2=ON \
+                        -DPNG_PNG_INCLUDE_DIR="${stage}/packages/include/libpng16/" \
+                        -DPNG_LIBRARY="${stage}/packages/lib/$arch/release/libpng16.a" \
+                        -DZLIB_INCLUDE_DIR="${stage}/packages/include/zlib-ng/" \
+                        -DZLIB_LIBRARY="${stage}/packages/lib/$arch/release/libz.a" \
+                        -DBROTLIDEC_INCLUDE_DIRS="${stage}/packages/include/" \
+                        -DBROTLIDEC_LIBRARIES="${stage}/packages/lib/$arch/release/libbrotlidec.a;${stage}/packages/lib/$arch/release/libbrotlicommon.a"
+
+                    cmake --build . --config Release
+                    cmake --install . --config Release
+
+                    # conditionally run unit tests
+                    if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                        ctest -C Release
+                    fi
+                popd
+            done
         ;;
     esac
     mkdir -p "$stage/LICENSES"
