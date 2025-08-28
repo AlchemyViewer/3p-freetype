@@ -42,57 +42,79 @@ pushd "$FREETYPELIB_SOURCE_DIR"
         windows*)
             load_vsvars
 
-            mkdir -p "build_debug"
-            pushd "build_debug"
-                opts="$(replace_switch /Zi /Z7 $LL_BUILD_DEBUG)"
-                plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
+            for arch in sse avx2 arm64 ; do
+                platform_target="x64"
+                if [[ "$arch" == "arm64" ]]; then
+                    platform_target="ARM64"
+                fi
 
-                cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" \
-                    -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_SHARED_LIBS:BOOL=OFF \
-                    -DCMAKE_C_FLAGS:STRING="$plainopts" \
-                    -DCMAKE_CXX_FLAGS:STRING="$opts" \
-                    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
-                    -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
-                    -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/debug")" \
-                    -DFT_REQUIRE_ZLIB=ON \
-                    -DFT_REQUIRE_PNG=ON \
-                    -DFT_DISABLE_HARFBUZZ=ON \
-                    -DFT_DISABLE_BZIP2=ON \
-                    -DFT_DISABLE_BROTLI=ON \
-                    -DZLIB_INCLUDE_DIR="$(cygpath -m "$stage/packages/include/zlib-ng/")" \
-                    -DZLIB_LIBRARY="$(cygpath -m "$stage/packages/lib/debug/zlibd.lib")" \
-                    -DPNG_PNG_INCLUDE_DIR="$(cygpath -m "${stage}/packages/include/libpng16/")" \
-                    -DPNG_LIBRARY="$(cygpath -m "${stage}/packages/lib/debug/libpng16.lib")"
+                mkdir -p "build_debug_$arch"
+                pushd "build_debug_$arch"
+                    opts="$(replace_switch /Zi /Z7 $LL_BUILD_DEBUG)"
+                    if [[ "$arch" == "avx2" ]]; then
+                        opts="$(replace_switch /arch:SSE4.2 /arch:AVX2 $opts)"
+                    elif [[ "$arch" == "arm64" ]]; then
+                        opts="$(remove_switch /arch:SSE4.2 $opts)"
+                    fi
+                    plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
 
-                cmake --build . --config Debug
-                cmake --install . --config Debug
-            popd
+                    cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$platform_target" \
+                        -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_SHARED_LIBS:BOOL=OFF \
+                        -DCMAKE_C_FLAGS:STRING="$plainopts" \
+                        -DCMAKE_CXX_FLAGS:STRING="$opts" \
+                        -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
+                        -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
+                        -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/$arch/debug")" \
+                        -DFT_REQUIRE_ZLIB=ON \
+                        -DFT_REQUIRE_PNG=ON \
+                        -DFT_REQUIRE_BROTLI=ON \
+                        -DFT_DISABLE_HARFBUZZ=ON \
+                        -DFT_DISABLE_BZIP2=ON \
+                        -DZLIB_INCLUDE_DIR="$(cygpath -m "$stage/packages/include/zlib-ng/")" \
+                        -DZLIB_LIBRARY="$(cygpath -m "$stage/packages/lib/$arch/debug/zlibd.lib")" \
+                        -DPNG_PNG_INCLUDE_DIR="$(cygpath -m "${stage}/packages/include/libpng16/")" \
+                        -DPNG_LIBRARY="$(cygpath -m "${stage}/packages/lib/$arch/debug/libpng16.lib")" \
+                        -DBROTLIDEC_INCLUDE_DIRS="$(cygpath -m "${stage}/packages/include/")" \
+                        -DBROTLIDEC_LIBRARIES="$(cygpath -m "${stage}/packages/lib/$arch/debug/brotlidec.lib;${stage}/packages/lib/sse/debug/brotlicommon.lib")"
 
-            mkdir -p "build_release"
-            pushd "build_release"
-                opts="$(replace_switch /Zi /Z7 $LL_BUILD_RELEASE)"
-                plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
+                    cmake --build . --config Debug
+                    cmake --install . --config Debug
+                popd
 
-                cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$AUTOBUILD_WIN_VSPLATFORM" \
-                    -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
-                    -DCMAKE_C_FLAGS:STRING="$plainopts" \
-                    -DCMAKE_CXX_FLAGS:STRING="$opts" \
-                    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
-                    -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
-                    -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/release")" \
-                    -DFT_REQUIRE_ZLIB=ON \
-                    -DFT_REQUIRE_PNG=ON \
-                    -DFT_DISABLE_HARFBUZZ=ON \
-                    -DFT_DISABLE_BZIP2=ON \
-                    -DFT_DISABLE_BROTLI=ON \
-                    -DZLIB_INCLUDE_DIR="$(cygpath -m "$stage/packages/include/zlib-ng/")" \
-                    -DZLIB_LIBRARY="$(cygpath -m "$stage/packages/lib/release/zlib.lib")" \
-                    -DPNG_PNG_INCLUDE_DIR="$(cygpath -m "${stage}/packages/include/libpng16/")" \
-                    -DPNG_LIBRARY="$(cygpath -m "${stage}/packages/lib/release/libpng16.lib")"
+                mkdir -p "build_release_$arch"
+                pushd "build_release_$arch"
+                    opts="$(replace_switch /Zi /Z7 $LL_BUILD_RELEASE)"
+                    if [[ "$arch" == "avx2" ]]; then
+                        opts="$(replace_switch /arch:SSE4.2 /arch:AVX2 $opts)"
+                    elif [[ "$arch" == "arm64" ]]; then
+                        opts="$(remove_switch /arch:SSE4.2 $opts)"
+                    fi
+                    plainopts="$(remove_switch /GR $(remove_cxxstd $opts))"
 
-                cmake --build . --config Release
-                cmake --install . --config Release
-            popd
+                    cmake .. -G "$AUTOBUILD_WIN_CMAKE_GEN" -A "$platform_target" \
+                        -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_SHARED_LIBS:BOOL=OFF \
+                        -DCMAKE_C_FLAGS:STRING="$plainopts" \
+                        -DCMAKE_CXX_FLAGS:STRING="$opts" \
+                        -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded" \
+                        -DCMAKE_INSTALL_PREFIX="$(cygpath -m $stage)" \
+                        -DCMAKE_INSTALL_LIBDIR="$(cygpath -m "$stage/lib/$arch/release")" \
+                        -DFT_REQUIRE_ZLIB=ON \
+                        -DFT_REQUIRE_PNG=ON \
+                        -DFT_REQUIRE_BROTLI=ON \
+                        -DFT_DISABLE_HARFBUZZ=ON \
+                        -DFT_DISABLE_BZIP2=ON \
+                        -DZLIB_INCLUDE_DIR="$(cygpath -m "$stage/packages/include/zlib-ng/")" \
+                        -DZLIB_LIBRARY="$(cygpath -m "$stage/packages/lib/$arch/release/zlib.lib")" \
+                        -DPNG_PNG_INCLUDE_DIR="$(cygpath -m "${stage}/packages/include/libpng16/")" \
+                        -DPNG_LIBRARY="$(cygpath -m "${stage}/packages/lib/$arch/release/libpng16.lib")" \
+                        -DBROTLIDEC_INCLUDE_DIRS="$(cygpath -m "${stage}/packages/include/")" \
+                        -DBROTLIDEC_LIBRARIES="$(cygpath -m "${stage}/packages/lib/$arch/release/brotlidec.lib;${stage}/packages/lib/$arch/release/brotlicommon.lib")"
+
+
+                    cmake --build . --config Release
+                    cmake --install . --config Release
+                popd
+            done
         ;;
 
         darwin*)

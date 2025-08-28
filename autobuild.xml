@@ -191,7 +191,7 @@
         <key>vcs_url</key>
         <string>git://github.com/AlchemyViewer/3p-brotli.git</string>
         <key>canonical_repo</key>
-        <string>https://git.alchemyviewer.org/alchemy/thirdparty/3p-brotli</string>
+        <string>https://github.com/AlchemyViewer/3p-brotli</string>
         <key>description</key>
         <string>Brotli is a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling.</string>
       </map>
@@ -291,8 +291,12 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>lib/debug/freetyped.*</string>
-            <string>lib/release/freetype.*</string>
+            <string>lib/sse/debug/freetyped.*</string>
+            <string>lib/avx2/debug/freetyped.*</string>
+            <string>lib/arm64/debug/freetyped.*</string>
+            <string>lib/sse/release/freetype.*</string>
+            <string>lib/avx2/release/freetype.*</string>
+            <string>lib/arm64/release/freetype.*</string>
           </array>
           <key>name</key>
           <string>windows</string>
